@@ -3,8 +3,6 @@ plugins {
     id 'maven-publish'
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
 group = mavenGroup
 version = projectVersion
 
