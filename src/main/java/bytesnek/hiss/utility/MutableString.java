@@ -39,8 +39,8 @@ public class MutableString
             return true;
         }
 
-        if (obj instanceof MutableString other) {
-            return value.equals(other.value);
+        if (obj instanceof MutableString) {
+            return value.equals(((MutableString) obj).value);
         }
 
         return false;

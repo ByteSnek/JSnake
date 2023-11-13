@@ -40,11 +40,11 @@ public class Pair<L, R>
             return true;
         }
 
-        if (!(other instanceof Pair<?, ?> pair)) {
+        if (!(other instanceof Pair<?, ?>)) {
             return false;
         }
 
-        return left.equals(pair.left) && right.equals(pair.right);
+        return left.equals(((Pair<?, ?>) other).left) && right.equals(((Pair<?, ?>) other).right);
     }
 
     @Override

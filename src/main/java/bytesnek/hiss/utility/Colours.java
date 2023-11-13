@@ -96,15 +96,29 @@ public class Colours
         float sat = vibranceColour * (1 - shift * saturationColour);
         float val = vibranceColour * (1 - (1 - shift) * saturationColour);
 
-        return switch (normal6) {
-            case 0 -> fastRGB(vibranceColour, val, hue);
-            case 1 -> fastRGB(sat, vibranceColour, hue);
-            case 2 -> fastRGB(hue, vibranceColour, val);
-            case 3 -> fastRGB(hue, sat, vibranceColour);
-            case 4 -> fastRGB(val, hue, vibranceColour);
-            case 5 -> fastRGB(vibranceColour, hue, sat);
-            default -> throw new RuntimeException();
-        };
+        switch (normal6) {
+            case 0: {
+                return fastRGB(vibranceColour, val, hue);
+            }
+            case 1: {
+                return fastRGB(sat, vibranceColour, hue);
+            }
+            case 2: {
+                return fastRGB(hue, vibranceColour, val);
+            }
+            case 3: {
+                return fastRGB(hue, sat, vibranceColour);
+            }
+            case 4: {
+                return fastRGB(val, hue, vibranceColour);
+            }
+            case 5: {
+                return fastRGB(vibranceColour, hue, sat);
+            }
+            default: {
+                throw new RuntimeException();
+            }
+        }
     }
 
     public static int fastRGB(float red, float green, float blue)
