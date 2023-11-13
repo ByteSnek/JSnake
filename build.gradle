@@ -1,0 +1,76 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+group = mavenGroup
+version = projectVersion
+
+sourceSets {
+    create('gradle')
+}
+
+configurations {
+    gradleCompileOnly.extendsFrom compileOnly
+    gradleImplementation.extendsFrom implementation
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation "com.github.SnakerBone:Snaker4j:${snaker4jVersion}"
+    implementation "com.ibm.icu:icu4j:68.2"
+
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-glfw"
+    implementation "org.joml:joml:${jomlVersion}"
+
+    runtimeOnly "org.lwjgl:lwjgl::${lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::${lwjglNatives}"
+
+    compileOnly 'org.jetbrains:annotations:22.0.0'
+
+    gradleCompileOnly gradleApi()
+    gradleImplementation sourceSets.main.getOutput()
+}
+
+jar {
+    from sourceSets.gradle.getOutput()
+
+    manifest {
+        attributes 'FMLModType': 'GAMELIBRARY'
+        attributes 'Automatic-Module-Name': mavenGroup
+    }
+
+    from file('LICENSE.txt')
+}
+
+tasks.register('docJar', Jar) {
+    build.dependsOn it
+    from javadoc
+    archiveClassifier = 'javadoc'
+}
+
+tasks.register('srcJar', Jar) {
+    build.dependsOn it
+    from sourceSets.main.allSource
+    archiveClassifier = 'sources'
+}
+
+publishing {
+    publications {
+        register('pub', MavenPublication) {
+            artifact jar
+            artifact srcJar
+            artifact docJar
+        }
+    }
+}
