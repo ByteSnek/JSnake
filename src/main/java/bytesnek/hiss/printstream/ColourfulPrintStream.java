@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import xyz.snaker.snkr4j.LogColour;
+import bytesnek.hiss.logger.LogColour;
 
 /**
  * Created by SnakerBone on 5/11/2023

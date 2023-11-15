@@ -5,15 +5,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import xyz.snaker.snkr4j.SimpleLogger;
-import xyz.snaker.snkr4j.SnakerLogger;
+import bytesnek.hiss.logger.Logger;
+import bytesnek.hiss.logger.SimpleLogger;
 
 /**
  * Created by SnakerBone on 13/11/2023
  **/
 public interface DLL extends DynamicLoader<DLL>, DynamicWriter
 {
-    SnakerLogger LOGGER = new SimpleLogger(DLL.class, true);
+    Logger LOGGER = new SimpleLogger(DLL.class, true);
     String TMPDIR = System.getProperty("java.io.tmpdir");
 
     String getLibraryName();

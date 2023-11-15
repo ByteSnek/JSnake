@@ -5,15 +5,15 @@ import java.util.Iterator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import xyz.snaker.snkr4j.SimpleLogger;
-import xyz.snaker.snkr4j.SnakerLogger;
+import bytesnek.hiss.logger.Logger;
+import bytesnek.hiss.logger.SimpleLogger;
 
 /**
  * Created by SnakerBone on 15/08/2023
  **/
 public class Strings
 {
-    private static final SnakerLogger LOGGER = new SimpleLogger(Strings.class, true);
+    private static final Logger LOGGER = new SimpleLogger(Strings.class, true);
 
     public static final String EMPTY = "";
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");

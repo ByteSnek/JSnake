@@ -1,7 +1,5 @@
 package bytesnek.hiss.logger;
 
-import xyz.snaker.snkr4j.LogLevel;
-
 /**
  * Created by SnakerBone on 4/11/2023
  **/

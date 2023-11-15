@@ -1,13 +1,9 @@
 package bytesnek.hiss.logger;
 
-import xyz.snaker.snkr4j.LogColour;
-import xyz.snaker.snkr4j.LogLevel;
-import xyz.snaker.snkr4j.SnakerLogger;
-
 /**
  * Created by SnakerBone on 4/11/2023
  **/
-public class SimpleLogger implements SnakerLogger
+public class SimpleLogger implements Logger
 {
     private final String name;
     private volatile boolean active;

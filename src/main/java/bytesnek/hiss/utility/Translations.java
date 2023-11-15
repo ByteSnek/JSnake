@@ -5,15 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import xyz.snaker.snkr4j.SimpleLogger;
-import xyz.snaker.snkr4j.SnakerLogger;
+import bytesnek.hiss.logger.Logger;
+import bytesnek.hiss.logger.SimpleLogger;
 
 /**
  * Created by SnakerBone on 13/11/2023
  **/
 public class Translations
 {
-    private static final SnakerLogger LOGGER = new SimpleLogger(Translations.class, true);
+    private static final Logger LOGGER = new SimpleLogger(Translations.class, true);
 
     public static String joinKey(String key, String artifactId, String exclusion)
     {

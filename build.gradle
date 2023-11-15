@@ -22,7 +22,6 @@ repositories {
 }
 
 dependencies {
-    implementation "com.github.SnakerBone:Snaker4j:${snaker4jVersion}"
     implementation "com.ibm.icu:icu4j:68.2"
 
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")

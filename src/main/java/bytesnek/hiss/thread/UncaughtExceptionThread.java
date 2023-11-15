@@ -1,14 +1,14 @@
 package bytesnek.hiss.thread;
 
-import xyz.snaker.snkr4j.SimpleLogger;
-import xyz.snaker.snkr4j.SnakerLogger;
+import bytesnek.hiss.logger.Logger;
+import bytesnek.hiss.logger.SimpleLogger;
 
 /**
  * Created by SnakerBone on 19/08/2023
  **/
 public class UncaughtExceptionThread extends Thread
 {
-    private static final SnakerLogger LOGGER = new SimpleLogger(UncaughtExceptionThread.class, true);
+    private static final Logger LOGGER = new SimpleLogger(UncaughtExceptionThread.class, true);
 
     private final UncaughtExceptionHandler handler;
     private final String message;
