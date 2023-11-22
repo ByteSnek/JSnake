@@ -292,6 +292,29 @@ public class Maths
     }
 
     /**
+     * Rounds a number to the nearest pow2
+     *
+     * @param a The number
+     * @return The rounded number
+     **/
+    public static int pow2r(int a)
+    {
+        int v = a;
+
+        v--;
+        v |= v >> 1;
+        v |= v >> 2;
+        v |= v >> 4;
+        v |= v >> 8;
+        v |= v >> 16;
+        v++;
+
+        int x = v >> 1;
+
+        return (v - a) > (a - x) ? x : v;
+    }
+
+    /**
      * Calculates the linear interpolation of three numbers
      *
      * @param a The first number
