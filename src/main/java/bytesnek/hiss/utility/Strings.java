@@ -6,17 +6,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import bytesnek.hiss.logger.Logger;
-import bytesnek.hiss.logger.SimpleLogger;
+import bytesnek.hiss.logger.Loggers;
 
 /**
  * Created by SnakerBone on 15/08/2023
  **/
 public class Strings
 {
-    private static final Logger LOGGER = new SimpleLogger(Strings.class, true);
+    private static final Logger LOGGER = Loggers.getLogger();
 
     public static final String EMPTY = "";
-    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    public static final String LINE_SEPARATOR = System.lineSeparator();
 
     /**
      * Gives a string consisting of the elements of a given array of strings, each separated by a given separator

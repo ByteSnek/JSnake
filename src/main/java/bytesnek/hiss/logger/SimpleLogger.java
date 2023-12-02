@@ -1,5 +1,9 @@
 package bytesnek.hiss.logger;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by SnakerBone on 4/11/2023
  **/
@@ -10,21 +14,37 @@ public class SimpleLogger implements Logger
 
     public SimpleLogger(Class<?> clazz, boolean active)
     {
-        this.name = clazz.getSimpleName();
+        this.name = trimClass(clazz);
         this.active = active;
+
+        LOGGERS.put(clazz, this);
     }
 
-    public SimpleLogger(String name, boolean active)
+    private String trimClass(Class<?> clazz)
     {
-        this.name = name;
-        this.active = active;
+        String[] pieces = clazz.getName().split("\\.");
+        List<String> strings = new ArrayList<>();
+
+        Arrays.stream(pieces).forEach(piece ->
+                {
+                    if (!Character.isUpperCase(piece.charAt(0))) {
+                        piece = piece.substring(0, 2);
+                    }
+
+                    strings.add(piece);
+                }
+        );
+
+        return String.join(".", strings);
     }
 
+    @Override
     public boolean isActive()
     {
         return active;
     }
 
+    @Override
     public void setActive(boolean active)
     {
         this.active = active;

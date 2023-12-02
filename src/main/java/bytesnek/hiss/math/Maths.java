@@ -427,9 +427,7 @@ public class Maths
     public static BigInteger factorial(long a)
     {
         BigInteger factorial = BigInteger.ONE;
-        for (long i = a;
-             i > 0;
-             i--) {
+        for (long i = a; i > 0; i--) {
             factorial = factorial.multiply(BigInteger.valueOf(i));
         }
         return factorial;

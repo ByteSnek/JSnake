@@ -14,7 +14,7 @@ import sun.misc.Unsafe;
 /**
  * Created by SnakerBone on 3/07/2023
  **/
-public class Sneaky
+public final class Sneaky
 {
     private static final SNKR SNKR = new SNKR();
     private static Unsafe theUnsafe;
@@ -125,11 +125,21 @@ public class Sneaky
     }
 
     /**
+     * Creates a breakpoint for the current JVM
+     *
+     * @param flag The flag to check for this breakpoint
+     **/
+    public static void createBreakpoint(boolean flag)
+    {
+        SNKR.breakpointInstance(flag);
+    }
+
+    /**
      * Force crashes the JVM by starving its memory
      **/
     public static void forceCrashJVM()
     {
-        setMemory(0, 0, 1);
+        SNKR.deRefNullPtr();
     }
 
     /**
@@ -202,7 +212,7 @@ public class Sneaky
      **/
     public static long uMemory(int alloc, int i)
     {
-        return SNKR.uMemory(alloc, i);
+        return SNKR.getEarlyMemory(alloc, i);
     }
 
     public static Unsafe getTheUnsafe()

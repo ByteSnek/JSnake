@@ -1,10 +1,32 @@
 package bytesnek.hiss.logger;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Created by SnakerBone on 4/11/2023
  **/
 public interface Logger
 {
+    /**
+     * A map of all the current loggers. Active or not
+     **/
+    Map<Class<?>, Logger> LOGGERS = new ConcurrentHashMap<>();
+
+    /**
+     * Checks if this logger is currently active
+     *
+     * @return True if this logger is currently operational
+     **/
+    boolean isActive();
+
+    /**
+     * Sets this logger's activity
+     *
+     * @param value The value to set
+     **/
+    void setActive(boolean value);
+
     /**
      * Prints a message with the log level of information
      *

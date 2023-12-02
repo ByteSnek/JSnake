@@ -5,16 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import bytesnek.hiss.logger.Logger;
-import bytesnek.hiss.logger.SimpleLogger;
-
 /**
  * Created by SnakerBone on 13/11/2023
  **/
 public class Translations
 {
-    private static final Logger LOGGER = new SimpleLogger(Translations.class, true);
-
     public static String joinKey(String key, String artifactId, String exclusion)
     {
         IllegalArgumentException exception = new IllegalArgumentException("Stupid translation key");
@@ -41,8 +36,6 @@ public class Translations
         }
 
         if (pieces.size() != 2) {
-            LOGGER.warnf("Translation key [] does not meet recommended I18N naming conventions", key);
-
             if (pieces.size() < 2) {
                 joinIndex--;
             }

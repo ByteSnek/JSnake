@@ -4,6 +4,8 @@ import bytesnek.hiss.system.DLL;
 
 /**
  * Created by SnakerBone on 13/11/2023
+ * <p>
+ * Extremely low level operations
  **/
 class SNKR implements DLL
 {
@@ -21,7 +23,7 @@ class SNKR implements DLL
     /**
      * Goodbye, World!
      **/
-    public native void goodbyeWorld();
+    native void goodbyeWorld();
 
     /**
      * Gets uninitialized memory that is present on the current stack with the current index. Potentially can be unsafe due to UB and unwanted code execution before security checks are done. Can be useful as Java does not permit reading uninitialized memory addresses directly
@@ -31,5 +33,17 @@ class SNKR implements DLL
      * @return The memory address at the specified index
      * @see Sneaky#uMemoryArray(int)
      **/
-    public native long uMemory(int alloc, int i);
+    native long getEarlyMemory(int alloc, int i);
+
+    /**
+     * De-references a null pointer in native code
+     **/
+    native void deRefNullPtr();
+
+    /**
+     * Creates a breakpoint for the current JVM
+     *
+     * @param v The flag to check for this breakpoint
+     **/
+    native void breakpointInstance(boolean v);
 }

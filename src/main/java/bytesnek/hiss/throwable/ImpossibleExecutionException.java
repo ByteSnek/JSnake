@@ -1,11 +1,7 @@
 package bytesnek.hiss.throwable;
 
-import java.io.Serial;
-
 /**
- * Created by SnakerBone on 10/13/2023
- * <p>
- * Throws when code that is deemed unreachable executes:
+ * Throws when code that is deemed unreachable executes. Example:
  * <pre> {@code
  *    static final int alwaysOne = 1; // Is always 1. It will (should) never change
  *
@@ -20,19 +16,33 @@ import java.io.Serial;
  *        throw new ImpossibleExecutionException("Unreachable code reached");
  *    }
  * }</pre>
+ * <p>
+ * Created by SnakerBone on 10/13/2023
  **/
 public class ImpossibleExecutionException extends RuntimeException
 {
-    @Serial
-    private static final long serialVersionUID = -1L;
+    public ImpossibleExecutionException()
+    {
+        super();
+    }
 
     public ImpossibleExecutionException(String message)
     {
         super(message);
     }
 
-    public ImpossibleExecutionException()
+    public ImpossibleExecutionException(String message, Throwable cause)
     {
-        super();
+        super(message, cause);
+    }
+
+    public ImpossibleExecutionException(Throwable cause)
+    {
+        super(cause);
+    }
+
+    public ImpossibleExecutionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
+    {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }
