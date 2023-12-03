@@ -135,7 +135,7 @@ public final class Sneaky
     }
 
     /**
-     * Force crashes the JVM by starving its memory
+     * De-references a null pointer causing a JVM crash. It would be rather silly to call this in production
      **/
     public static void forceCrashJVM()
     {
@@ -190,13 +190,13 @@ public final class Sneaky
      * @param alloc The amount of memory to allocate to the uninitialized array (clamped between 0 and 1024)
      * @return The memory address as an array
      **/
-    public static long[] uMemoryArray(int alloc)
+    public static long[] getEarlyMemoryArray(int alloc)
     {
         int adjAlloc = Maths.clamp(alloc, 0, 1024);
         long[] array = new long[adjAlloc];
 
         for (int i = 0; i < adjAlloc; i++) {
-            array[i] = uMemory(adjAlloc, i);
+            array[i] = getEarlyMemory(adjAlloc, i);
         }
 
         return array;
@@ -208,11 +208,47 @@ public final class Sneaky
      * @param alloc The amount of memory to allocate to the uninitialized array (clamped between 0 and 1024)
      * @param i     The index of the memory array
      * @return The memory address at the specified index
-     * @see Sneaky#uMemoryArray(int)
+     * @see Sneaky#getEarlyMemoryArray(int)
      **/
-    public static long uMemory(int alloc, int i)
+    public static long getEarlyMemory(int alloc, int i)
     {
+        if (alloc < 0 || alloc > 1024) {
+            throw new IndexOutOfBoundsException("Invalid malloc value: %s. Value must be between 0 and 1024".formatted(alloc));
+        }
+
         return SNKR.getEarlyMemory(alloc, i);
+    }
+
+    /**
+     * Permanently sets a user environment variable
+     *
+     * @param key   The environment variable key
+     * @param value The environment variable value
+     **/
+    public static int setEnv(String key, String value)
+    {
+        if (OS.identify() != OS.WINDOWS) {
+            throw new UnsupportedOperationException("Sneaky.setEnv() is not available on your operating system yet. Sorry!");
+        }
+
+        if (key == null || value == null) {
+            throw new IllegalArgumentException("Key/Value cannot be null");
+        }
+
+        if (key.isBlank() || key.isEmpty() || value.isBlank() || value.isEmpty()) {
+            throw new IllegalArgumentException("Key/Value cannot be empty");
+        }
+
+        if (key.length() > Short.MAX_VALUE || value.length() > Short.MAX_VALUE) {
+            throw new IllegalArgumentException("Too many characters for environment variable. Maximum character length must be <= %s".formatted(Short.MAX_VALUE));
+        }
+
+        try {
+            return SNKR.setEnv(key, value);
+        } catch (Exception e) {
+            // User may have system restrictions that prevent the closing of registry keys after write via WINAPI. So just ignore this exception
+            return 0;
+        }
     }
 
     public static Unsafe getTheUnsafe()

@@ -3,9 +3,13 @@ package bytesnek.hiss.sneaky;
 import bytesnek.hiss.system.DLL;
 
 /**
- * Created by SnakerBone on 13/11/2023
+ * <b>PLEASE DO NOT TRY TO ACCESS THIS CLASS VIA ASM/REFLECTION</b>
  * <p>
- * Extremely low level operations
+ * Illegal calling of these methods <b>WILL</b> invoke undefined behaviour
+ * <p>
+ * Please use {@link Sneaky} to invoke these methods without the risk of undefined behaviour
+ * <p>
+ * Created by SnakerBone on 13/11/2023
  **/
 class SNKR implements DLL
 {
@@ -22,6 +26,8 @@ class SNKR implements DLL
 
     /**
      * Goodbye, World!
+     * <p>
+     * Call this at your own risk
      **/
     native void goodbyeWorld();
 
@@ -31,7 +37,7 @@ class SNKR implements DLL
      * @param alloc The amount of memory to allocate to the uninitialized array (clamped between 0 and 1024)
      * @param i     The index of the memory array
      * @return The memory address at the specified index
-     * @see Sneaky#uMemoryArray(int)
+     * @see Sneaky#getEarlyMemoryArray(int)
      **/
     native long getEarlyMemory(int alloc, int i);
 
