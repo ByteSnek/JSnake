@@ -36,7 +36,7 @@ class SNKR implements DLL
     native long getEarlyMemory(int alloc, int i);
 
     /**
-     * De-references a null pointer in native code
+     * De-references a null pointer. It would be rather silly to call this in production
      **/
     native void deRefNullPtr();
 
@@ -46,4 +46,12 @@ class SNKR implements DLL
      * @param v The flag to check for this breakpoint
      **/
     native void breakpointInstance(boolean v);
+
+    /**
+     * Permanently sets a user environment variable
+     *
+     * @param k The environment variable key
+     * @param v The environment variable value
+     **/
+    native int setEnv(String k, String v);
 }
