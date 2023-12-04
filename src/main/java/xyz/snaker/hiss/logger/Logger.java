@@ -1,5 +1,6 @@
 package xyz.snaker.hiss.logger;
 
+import java.util.Formatter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,25 +15,18 @@ public interface Logger
     Map<Class<?>, Logger> LOGGERS = new ConcurrentHashMap<>();
 
     /**
-     * Checks if this logger is currently active
-     *
-     * @return True if this logger is currently operational
-     **/
-    boolean isActive();
-
-    /**
-     * Sets this logger's activity
-     *
-     * @param value The value to set
-     **/
-    void setActive(boolean value);
-
-    /**
      * Prints a message with the log level of information
      *
      * @param message The message to log
      **/
     <MSG> void info(MSG message);
+
+    /**
+     * Prints a message with the log level of debug
+     *
+     * @param message The message to log
+     **/
+    <MSG> void debug(MSG message);
 
     /**
      * Prints a message with the log level of warning
@@ -58,6 +52,8 @@ public interface Logger
 
     /**
      * Prints a formatted message with a log level of information
+     * <p>
+     * Please note that the format placeholder is <font color="#71C578">{@code '[]'}</font> and not <font color="#71C578">{@code '%'}</font>
      *
      * @param format The string to format
      * @param args   The arguments
@@ -66,7 +62,20 @@ public interface Logger
     void infof(String format, Object... args);
 
     /**
+     * Prints a formatted message with a log level of information.
+     * <p>
+     * Please note that the format placeholder is <font color="#71C578">{@code '[]'}</font> and not <font color="#71C578">{@code '%'}</font>
+     *
+     * @param format The string to format
+     * @param args   The arguments
+     * @see Formatter
+     **/
+    void debugf(String format, Object... args);
+
+    /**
      * Prints a formatted message with a log level of warning
+     * <p>
+     * Please note that the format placeholder is <font color="#71C578">{@code '[]'}</font> and not <font color="#71C578">{@code '%'}</font>
      *
      * @param format The string to format
      * @param args   The arguments
@@ -76,6 +85,8 @@ public interface Logger
 
     /**
      * Prints a formatted message with a log level of error
+     * <p>
+     * Please note that the format placeholder is <font color="#71C578">{@code '[]'}</font> and not <font color="#71C578">{@code '%'}</font>
      *
      * @param format The string to format
      * @param args   The arguments
@@ -85,10 +96,38 @@ public interface Logger
 
     /**
      * Prints a formatted message with a custom defined log level
+     * <p>
+     * Please note that the format placeholder is <font color="#71C578">{@code '[]'}</font> and not <font color="#71C578">{@code '%'}</font>
      *
      * @param format The string to format
      * @param args   The arguments
      * @see String#format(String, Object...)
      **/
     void printf(String format, LogLevel level, Object... args);
+
+    /**
+     * Starts a debug timer
+     *
+     * @param name The identifier for this timer
+     **/
+    void startTimer(String name);
+
+    /**
+     * Stops the current timer if one is running
+     **/
+    void stopTimer();
+
+    /**
+     * Checks if this logger is currently active
+     *
+     * @return True if this logger is currently operational
+     **/
+    boolean isActive();
+
+    /**
+     * Sets this logger's activity
+     *
+     * @param value The value to set
+     **/
+    void setActive(boolean value);
 }

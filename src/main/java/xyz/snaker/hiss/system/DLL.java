@@ -14,7 +14,7 @@ import xyz.snaker.hiss.throwable.LibraryAlreadyLoadedException;
 /**
  * Created by SnakerBone on 13/11/2023
  **/
-public interface DLL extends DynamicObserver<DLL>, DynamicLoader<DLL>, DynamicWriter
+public interface DLL extends DynamicLink<DLL>, DynamicLoader<DLL>, DynamicWriter
 {
     Logger LOGGER = Loggers.getLogger();
     String TMPDIR = System.getProperty("java.io.tmpdir");
@@ -90,7 +90,7 @@ public interface DLL extends DynamicObserver<DLL>, DynamicLoader<DLL>, DynamicWr
         File parent = makeTempDirectory(getLibraryName());
 
         try {
-            return File.createTempFile(getLibraryName(), ".dll", parent);
+            return File.createTempFile(getLibraryName(), ".dll", parent); // Create as a temp file as libraries cannot be loaded directly from a JAR
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

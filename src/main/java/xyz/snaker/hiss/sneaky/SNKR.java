@@ -9,6 +9,8 @@ import xyz.snaker.hiss.system.DLL;
  * <p>
  * Please use {@link Sneaky} to invoke these methods without the risk of undefined behaviour
  * <p>
+ * This library is currently only compatible with Windows 7 devices or newer
+ * <p>
  * Created by SnakerBone on 13/11/2023
  **/
 class SNKR implements DLL

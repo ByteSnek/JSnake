@@ -6,6 +6,7 @@ package xyz.snaker.hiss.logger;
 public class LogLevel
 {
     public static final LogLevel INFO = new LogLevel(LogMarker.INFO, LogColour.WHITE);
+    public static final LogLevel DEBUG = new LogLevel(LogMarker.DEBUG, LogColour.TURQUOISE);
     public static final LogLevel WARN = new LogLevel(LogMarker.WARN, LogColour.ORANGE);
     public static final LogLevel ERROR = new LogLevel(LogMarker.ERROR, LogColour.RED);
 
@@ -18,12 +19,12 @@ public class LogLevel
         this.colour = colour;
     }
 
-    public LogMarker marker()
+    public LogMarker getMarker()
     {
         return marker;
     }
 
-    public LogColour colour()
+    public LogColour getColour()
     {
         return colour;
     }
@@ -31,6 +32,6 @@ public class LogLevel
     @Override
     public String toString()
     {
-        return "LEVEL/" + marker.value();
+        return "LEVEL/" + marker.getValue();
     }
 }

@@ -6,6 +6,7 @@ package xyz.snaker.hiss.logger;
 public class LogMarker
 {
     public static final LogMarker INFO = new LogMarker("INFO");
+    public static final LogMarker DEBUG = new LogMarker("DEBUG");
     public static final LogMarker WARN = new LogMarker("WARN");
     public static final LogMarker ERROR = new LogMarker("ERROR");
 
@@ -16,7 +17,7 @@ public class LogMarker
         this.value = value.toUpperCase();
     }
 
-    public String value()
+    public String getValue()
     {
         return value;
     }
