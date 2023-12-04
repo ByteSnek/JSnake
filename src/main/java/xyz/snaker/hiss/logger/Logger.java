@@ -53,7 +53,7 @@ public interface Logger
     /**
      * Prints a formatted message with a log level of information
      * <p>
-     * Please note that the format placeholder is <font color="#71C578">{@code '[]'}</font> and not <font color="#71C578">{@code '%'}</font>
+     * Please note that the format placeholder is {@code '[]'} and not {@code '%'}
      *
      * @param format The string to format
      * @param args   The arguments
@@ -64,7 +64,7 @@ public interface Logger
     /**
      * Prints a formatted message with a log level of information.
      * <p>
-     * Please note that the format placeholder is <font color="#71C578">{@code '[]'}</font> and not <font color="#71C578">{@code '%'}</font>
+     * Please note that the format placeholder is {@code '[]'} and not {@code '%'}
      *
      * @param format The string to format
      * @param args   The arguments
@@ -75,7 +75,7 @@ public interface Logger
     /**
      * Prints a formatted message with a log level of warning
      * <p>
-     * Please note that the format placeholder is <font color="#71C578">{@code '[]'}</font> and not <font color="#71C578">{@code '%'}</font>
+     * Please note that the format placeholder is {@code '[]'} and not {@code '%'}
      *
      * @param format The string to format
      * @param args   The arguments
@@ -86,7 +86,7 @@ public interface Logger
     /**
      * Prints a formatted message with a log level of error
      * <p>
-     * Please note that the format placeholder is <font color="#71C578">{@code '[]'}</font> and not <font color="#71C578">{@code '%'}</font>
+     * Please note that the format placeholder is {@code '[]'} and not {@code '%'}
      *
      * @param format The string to format
      * @param args   The arguments
@@ -97,7 +97,7 @@ public interface Logger
     /**
      * Prints a formatted message with a custom defined log level
      * <p>
-     * Please note that the format placeholder is <font color="#71C578">{@code '[]'}</font> and not <font color="#71C578">{@code '%'}</font>
+     * Please note that the format placeholder is {@code '[]'} and not {@code '%'}
      *
      * @param format The string to format
      * @param args   The arguments
