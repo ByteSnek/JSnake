@@ -6,7 +6,6 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import xyz.snaker.hiss.logger.LogColour;
-import xyz.snaker.hiss.logger.Loggers;
 
 /**
  * Created by SnakerBone on 5/11/2023
@@ -41,11 +40,5 @@ public class ColourfulPrintStream extends PrintStream
         int colour = random.nextInt(216) + 16;
 
         return "\u001b[38;5;" + colour + "m" + character + reset;
-    }
-
-    public static void main(String[] args)
-    {
-        Loggers.getLogger().error("hhhhhhhhhh");
-        System.err.println("ggggggggggg");
     }
 }
