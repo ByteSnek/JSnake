@@ -1,7 +1,6 @@
 package xyz.snaker.hiss.sneaky;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.function.IntFunction;
@@ -14,14 +13,13 @@ import org.jetbrains.annotations.Nullable;
  **/
 public class Reflection
 {
-    public static <T> T getFieldDirect(Class<?> clazz, String name, boolean isPrivate, @Nullable Object obj)
+    public static <T> T getFieldDirect(Class<?> clazz, String name, @Nullable Object instance)
     {
         try {
             Field field = clazz.getDeclaredField(name);
-            if (isPrivate) {
-                field.setAccessible(true);
-            }
-            return Sneaky.cast(field.get(obj));
+            setAccessibleIfNeeded(field);
+
+            return Sneaky.cast(field.get(instance));
         } catch (IllegalAccessException | NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -30,7 +28,7 @@ public class Reflection
     public static <T> T[] getFieldsInClass(Class<?> clazz, Predicate<? super Object> filter, IntFunction<T[]> generator)
     {
         return Sneaky.cast(Arrays.stream(clazz.getDeclaredFields())
-                .map(field -> getFieldDirect(clazz, field.getName(), Modifier.isPrivate(field.getModifiers()), null))
+                .map(field -> getFieldDirect(clazz, field.getName(), null))
                 .filter(filter)
                 .toArray(generator)
         );
@@ -39,7 +37,7 @@ public class Reflection
     public static <T> T getRandomFieldInClass(Class<?> clazz, @Nullable Predicate<? super Object> filter, IntFunction<T[]> generator)
     {
         return getRandom(Arrays.stream(clazz.getDeclaredFields())
-                .map(field -> getFieldDirect(clazz, field.getName(), Modifier.isPrivate(field.getModifiers()), null))
+                .map(field -> getFieldDirect(clazz, field.getName(), null))
                 .filter(filter == null ? o -> true : filter)
                 .toArray(generator), new Random()
         );
@@ -86,8 +84,50 @@ public class Reflection
         return getFieldName(obj, parent, true);
     }
 
+    public static Class<?> getUncheckedClass(String className)
+    {
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Method getUncheckedMethod(Class<?> clazz, String name, Class<?>... params)
+    {
+        try {
+            Method method = clazz.getDeclaredMethod(name, params);
+            setAccessibleIfNeeded(method);
+            return clazz.getDeclaredMethod(name, params);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T invokeUncheckedMethod(Method method, @Nullable Object instance, Object... args)
+    {
+        try {
+            setAccessibleIfNeeded(method);
+            return Sneaky.cast(method.invoke(instance, args));
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     static <T> T getRandom(T[] values, Random random)
     {
         return values[random.nextInt(values.length)];
+    }
+
+    static <T extends AccessibleObject & Member> void setAccessibleIfNeeded(T obj)
+    {
+        obj.setAccessible(isUnaccessible(obj));
+    }
+
+    static <T extends AccessibleObject & Member> boolean isUnaccessible(T obj)
+    {
+        int modifiers = obj.getModifiers();
+
+        return Modifier.isPrivate(modifiers) || Modifier.isProtected(modifiers);
     }
 }

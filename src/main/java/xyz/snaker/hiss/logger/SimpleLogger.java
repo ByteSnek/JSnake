@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import xyz.snaker.hiss.sneaky.References;
 import xyz.snaker.hiss.utility.Strings;
-
-import org.apache.commons.lang3.time.DurationFormatUtils;
 
 /**
  * Created by SnakerBone on 4/11/2023
@@ -14,6 +13,10 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 public class SimpleLogger implements Logger
 {
     public static final String RESET = LogColour.Style.RESET.getValue();
+
+    static {
+        References.getDurationFormatUtils();
+    }
 
     private final String name;
     private volatile boolean active;
@@ -125,7 +128,7 @@ public class SimpleLogger implements Logger
     {
         if (timerActive) {
             long time = System.currentTimeMillis() - timerCount;
-            String formattedTime = DurationFormatUtils.formatDuration(time, "s.S");
+            String formattedTime = References.formatDuration(time, "s.S");
 
             debugf("Timer [] took []s", timerName, formattedTime);
 

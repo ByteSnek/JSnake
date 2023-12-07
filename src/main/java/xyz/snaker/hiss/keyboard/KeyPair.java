@@ -2,11 +2,11 @@ package xyz.snaker.hiss.keyboard;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
+import xyz.snaker.hiss.sneaky.References;
 import xyz.snaker.hiss.sneaky.Reflection;
 import xyz.snaker.hiss.utility.Pair;
-
-import org.lwjgl.glfw.GLFW;
 
 /**
  * Created by SnakerBone on 17/10/2023
@@ -16,19 +16,19 @@ public class KeyPair
     /**
      * Super Keys
      **/
-    public static final KeyPair SUPER = new KeyPair(GLFW.GLFW_KEY_LEFT_SUPER, GLFW.GLFW_KEY_RIGHT_SUPER);
+    public static final Function<Long, KeyPair> SUPER = handle -> new KeyPair(handle, 343, 347);
     /**
      * Shift Keys
      **/
-    public static final KeyPair SHIFT = new KeyPair(GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_RIGHT_SHIFT);
+    public static final Function<Long, KeyPair> SHIFT = handle -> new KeyPair(handle, 340, 344);
     /**
      * Control Keys
      **/
-    public static final KeyPair CONTROL = new KeyPair(GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_RIGHT_CONTROL);
+    public static final Function<Long, KeyPair> CONTROL = handle -> new KeyPair(handle, 341, 345);
     /**
      * Alternate Keys
      **/
-    public static final KeyPair ALTERNATE = new KeyPair(GLFW.GLFW_KEY_LEFT_ALT, GLFW.GLFW_KEY_RIGHT_ALT);
+    public static final Function<Long, KeyPair> ALTERNATE = handle -> new KeyPair(handle, 342, 346);
 
     /**
      * Internal pair holding the keys
@@ -38,43 +38,32 @@ public class KeyPair
     /**
      * The handle of the current window
      **/
-    private long handle;
+    private final long handle;
 
-    public KeyPair(int left, int right)
+    public KeyPair(long handle, int left, int right)
     {
         validateKeys(left, right);
-        findOrSetWindowHandle();
 
         this.keyPair = new Pair<>(left, right);
+        this.handle = handle;
     }
 
     /**
-     * A KeyPair with left shift and a custom defined key
-     *
-     * @param key The key
-     * @return A new shifted KeyPair
-     **/
-    public static KeyPair shifted(int key)
-    {
-        return new KeyPair(GLFW.GLFW_KEY_LEFT_SHIFT, key);
-    }
-
-    /**
-     * Checks if a key is invalid. Valid keys should be one of the field values present in {@link GLFW}
+     * Checks if a key is invalid
      *
      * @param key The key to check
      * @return True if the key is invalid or does not exist
      **/
     private static boolean isInvalidKey(int key)
     {
-        Integer[] rawValues = Reflection.getFieldsInClass(GLFW.class, o -> o instanceof Integer, Integer[]::new);
+        Integer[] rawValues = Reflection.getFieldsInClass(References.getGlfw(), o -> o instanceof Integer, Integer[]::new);
         List<Integer> values = Arrays.stream(rawValues).toList();
 
         return !values.contains(key);
     }
 
     /**
-     * Checks if a key is invalid. Valid keys should be one of the field values present in {@link GLFW}
+     * Checks if a key is invalid
      *
      * @param keys The keys to check
      * @throws IllegalArgumentException If a key is invalid
@@ -86,14 +75,6 @@ public class KeyPair
                 throw new IllegalArgumentException("Key '%s' not found. Key should be a value of one of the following fields present in org.lwjgl.glfw.GLFW or similar".formatted(key));
             }
         }
-    }
-
-    /**
-     * Attempts to find and/or set the current window handle
-     **/
-    private void findOrSetWindowHandle()
-    {
-        handle = GLFW.glfwGetCurrentContext();
     }
 
     /**

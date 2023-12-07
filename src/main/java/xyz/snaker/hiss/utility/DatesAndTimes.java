@@ -2,13 +2,7 @@ package xyz.snaker.hiss.utility;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-
-import xyz.snaker.hiss.sneaky.Reflection;
-
-import com.ibm.icu.util.SimpleHoliday;
 
 /**
  * Created by SnakerBone on 15/08/2023
@@ -99,18 +93,5 @@ public class DatesAndTimes
     public static long toSeconds(long time)
     {
         return (long) Math.round(time * SECOND) / SECOND;
-    }
-
-    /**
-     * Checks if today is a holiday
-     *
-     * @return True if today is currently a holiday
-     **/
-    public static boolean isHoliday()
-    {
-        SimpleHoliday[] holidays = Reflection.getFieldsInClass(SimpleHoliday.class, o -> o instanceof SimpleHoliday, SimpleHoliday[]::new);
-        List<Boolean> activeHolidays = Arrays.stream(holidays).map(holiday -> holiday.isOn(NOW)).toList();
-
-        return activeHolidays.contains(true);
     }
 }
