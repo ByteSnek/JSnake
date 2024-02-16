@@ -36,7 +36,7 @@ jar {
         attributes 'Automatic-Module-Name': mavenGroup
     }
 
-    from file('LICENSE.txt')
+    from file('LICENSE')
 }
 
 tasks.register('docJar', Jar) {
