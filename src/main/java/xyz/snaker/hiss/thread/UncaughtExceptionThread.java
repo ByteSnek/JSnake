@@ -2,7 +2,6 @@ package xyz.snaker.hiss.thread;
 
 import xyz.snaker.hiss.logger.Logger;
 import xyz.snaker.hiss.logger.Loggers;
-import xyz.snaker.hiss.sneaky.Sneaky;
 
 /**
  * Created by SnakerBone on 19/08/2023
@@ -62,14 +61,6 @@ public class UncaughtExceptionThread extends Thread
         if (true) {
             throw new RuntimeException(message);
         }
-    }
-
-    @Override
-    public synchronized void start()
-    {
-        Sneaky.createBreakpoint(breakpoint);
-
-        super.start();
     }
 
     @Override

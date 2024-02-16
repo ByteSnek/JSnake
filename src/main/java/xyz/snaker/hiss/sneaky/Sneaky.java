@@ -1,23 +1,18 @@
 package xyz.snaker.hiss.sneaky;
 
+import org.jetbrains.annotations.NotNull;
+import sun.misc.Unsafe;
+import xyz.snaker.hiss.thread.UncaughtExceptionThread;
+
 import java.lang.reflect.Field;
 import java.nio.ByteOrder;
 import java.util.Objects;
-
-import org.jetbrains.annotations.NotNull;
-
-import xyz.snaker.hiss.math.Maths;
-import xyz.snaker.hiss.system.OS;
-import xyz.snaker.hiss.thread.UncaughtExceptionThread;
-
-import sun.misc.Unsafe;
 
 /**
  * Created by SnakerBone on 3/07/2023
  **/
 public final class Sneaky
 {
-    private static final SNKR SNKR = new SNKR();
     private static Unsafe theUnsafe;
 
     private static final ByteOrder BYTE_ORDER = ByteOrder.nativeOrder();
@@ -126,38 +121,6 @@ public final class Sneaky
     }
 
     /**
-     * Creates a breakpoint for the current JVM
-     *
-     * @param flag The flag to check for this breakpoint
-     **/
-    public static void createBreakpoint(boolean flag)
-    {
-        SNKR.breakpointInstance(flag);
-    }
-
-    /**
-     * De-references a null pointer causing a JVM crash. It would be rather silly to call this in production
-     **/
-    public static void forceCrashJVM()
-    {
-        SNKR.deRefNullPtr();
-    }
-
-    /**
-     * Says goodbye to the current context
-     **/
-    public static void goodbyeWorld()
-    {
-        OS os = OS.identify();
-
-        if (os != OS.WINDOWS) {
-            throw new UnsupportedOperationException("Sneaky.goodbyeWorld() is not available on your operating system yet. Sorry!");
-        }
-
-        SNKR.goodbyeWorld();
-    }
-
-    /**
      * Sets the memory of the JVM
      *
      * @param pointer The pointer
@@ -182,73 +145,6 @@ public final class Sneaky
                     setMemory32(ptr, value, (int) bytes & 0xFF);
                 }
             }
-        }
-    }
-
-    /**
-     * Gets uninitialized memory that is present on the current stack. Potentially can be unsafe due to UB and unwanted code execution before security checks are done. Can be useful as Java does not permit reading uninitialized memory addresses directly
-     *
-     * @param alloc The amount of memory to allocate to the uninitialized array (clamped between 0 and 1024)
-     * @return The memory address as an array
-     **/
-    public static long[] getEarlyMemoryArray(int alloc)
-    {
-        int adjAlloc = Maths.clamp(alloc, 0, 1024);
-        long[] array = new long[adjAlloc];
-
-        for (int i = 0; i < adjAlloc; i++) {
-            array[i] = getEarlyMemory(adjAlloc, i);
-        }
-
-        return array;
-    }
-
-    /**
-     * Gets uninitialized memory that is present on the current stack with the current index. Potentially can be unsafe due to UB and unwanted code execution before security checks are done. Can be useful as Java does not permit reading unitialized memory addresses directly
-     *
-     * @param alloc The amount of memory to allocate to the uninitialized array (clamped between 0 and 1024)
-     * @param i     The index of the memory array
-     * @return The memory address at the specified index
-     * @see Sneaky#getEarlyMemoryArray(int)
-     **/
-    public static long getEarlyMemory(int alloc, int i)
-    {
-        if (alloc < 0 || alloc > 1024) {
-            throw new IndexOutOfBoundsException("Invalid malloc value: %s. Value must be between 0 and 1024".formatted(alloc));
-        }
-
-        return SNKR.getEarlyMemory(alloc, i);
-    }
-
-    /**
-     * Permanently sets a user environment variable
-     *
-     * @param key   The environment variable key
-     * @param value The environment variable value
-     **/
-    public static int setEnv(String key, String value)
-    {
-        if (OS.identify() != OS.WINDOWS) {
-            throw new UnsupportedOperationException("Sneaky.setEnv() is not available on your operating system yet. Sorry!");
-        }
-
-        if (key == null || value == null) {
-            throw new IllegalArgumentException("Key/Value cannot be null");
-        }
-
-        if (key.isBlank() || key.isEmpty() || value.isBlank() || value.isEmpty()) {
-            throw new IllegalArgumentException("Key/Value cannot be empty");
-        }
-
-        if (key.length() > Short.MAX_VALUE || value.length() > Short.MAX_VALUE) {
-            throw new IllegalArgumentException("Too many characters for environment variable. Maximum character length must be <= %s".formatted(Short.MAX_VALUE));
-        }
-
-        try {
-            return SNKR.setEnv(key, value);
-        } catch (Exception e) {
-            // User may have system restrictions that prevent the closing of registry keys after write via WINAPI. So just ignore this exception
-            return 0;
         }
     }
 

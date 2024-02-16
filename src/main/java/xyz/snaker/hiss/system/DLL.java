@@ -1,15 +1,15 @@
 package xyz.snaker.hiss.system;
 
+import xyz.snaker.hiss.logger.Logger;
+import xyz.snaker.hiss.logger.Loggers;
+import xyz.snaker.hiss.throwable.LibraryAlreadyLoadedException;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import xyz.snaker.hiss.logger.Logger;
-import xyz.snaker.hiss.logger.Loggers;
-import xyz.snaker.hiss.throwable.LibraryAlreadyLoadedException;
 
 /**
  * Created by SnakerBone on 13/11/2023
