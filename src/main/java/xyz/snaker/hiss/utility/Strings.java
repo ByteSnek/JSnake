@@ -1,12 +1,15 @@
 package xyz.snaker.hiss.utility;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import xyz.snaker.hiss.logger.Logger;
 import xyz.snaker.hiss.logger.Loggers;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by SnakerBone on 15/08/2023
@@ -76,7 +79,15 @@ public class Strings
     public static String i18nt(String string)
     {
         if (!string.isEmpty()) {
-            return Stream.of(string.trim().split("\\s|\\p{Pc}")).filter(word -> word.length() > 0).map(word -> word.substring(0, 1).toUpperCase() + word.substring(1)).collect(Collectors.joining(" "));
+            String[] regex = string.trim().split("\\s|\\p{Pc}");
+            Predicate<String> notEmpty = word -> !word.isEmpty();
+            Function<String, String> mapper = word -> word.substring(0, 1).toUpperCase() + word.substring(1);
+            Collector<CharSequence, ?, String> collector = Collectors.joining(" ");
+
+            return Stream.of(regex)
+                    .filter(notEmpty)
+                    .map(mapper)
+                    .collect(collector);
         } else {
             return string;
         }
