@@ -2,6 +2,7 @@ package xyz.snaker.hiss.utility;
 
 import xyz.snaker.hiss.logger.Logger;
 import xyz.snaker.hiss.logger.Loggers;
+import xyz.snaker.hiss.thread.PeripheralException;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -22,12 +23,40 @@ public class Strings
     public static final String LINE_SEPARATOR = System.lineSeparator();
 
     /**
-     * Gives a string consisting of the elements of a given array of strings, each separated by a given separator
-     * string.
+     * Removes an extension from a string
+     * <p>
+     * For example these strings:
+     * <pre>
+     *     object.json
+     *     image.png
+     *     text.txt
+     * </pre>
+     * Would be converted to:
+     * <pre>
+     *     object
+     *     image
+     *     text
+     * </pre>
      *
-     * @param pieces    the strings to join
-     * @param separator the separator
-     * @return the joined string
+     * @param string The string to strip the extension from
+     * @return The stripped string
+     */
+    public static String stripExtension(String string)
+    {
+        if (!string.contains(".")) {
+            PeripheralException.invoke(new RuntimeException("String '%s' does not seem to contain an extension"));
+        }
+
+        return string.substring(0, string.lastIndexOf('.'));
+    }
+
+    /**
+     * Gives a string consisting of the elements of a given array of strings, each separated by a given separator
+     * string
+     *
+     * @param pieces    The strings to join
+     * @param separator The separator
+     * @return The joined string
      */
     public static String join(String[] pieces, String separator)
     {
@@ -36,11 +65,11 @@ public class Strings
 
     /**
      * Gives a string consisting of the string representations of the elements of a given array of objects,
-     * each separated by a given separator string.
+     * each separated by a given separator string
      *
-     * @param pieces    the elements whose string representations are to be joined
-     * @param separator the separator
-     * @return the joined string
+     * @param pieces    The elements whose string representations are to be joined
+     * @param separator The separator
+     * @return The joined string
      */
     public static String join(Iterable<String> pieces, String separator)
     {

@@ -2,7 +2,7 @@ package xyz.snaker.hiss.sneaky;
 
 import org.jetbrains.annotations.NotNull;
 import sun.misc.Unsafe;
-import xyz.snaker.hiss.thread.UncaughtExceptionThread;
+import xyz.snaker.hiss.thread.PeripheralException;
 
 import java.lang.reflect.Field;
 import java.nio.ByteOrder;
@@ -56,7 +56,7 @@ public final class Sneaky
             field.setAccessible(true);
             theUnsafe = (Unsafe) field.get(null);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            UncaughtExceptionThread.createAndRun("Failed to get theUnsafe", e);
+            PeripheralException.invoke("Failed to get theUnsafe", e);
         }
     }
 
