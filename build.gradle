@@ -39,6 +39,12 @@ jar {
     from file('LICENSE')
 }
 
+tasks.register('preparePublish', JavaExec) {
+    group "publishing"
+    mainClass = "xyz.snaker.hiss.maven.MavenRepositoryHook"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 tasks.register('docJar', Jar) {
     build.dependsOn it
     from javadoc
@@ -51,7 +57,18 @@ tasks.register('srcJar', Jar) {
     archiveClassifier = 'sources'
 }
 
+publish.dependsOn preparePublish
+
 publishing {
+    repositories {
+        maven {
+            url "http://127.0.0.1:8080/releases"
+            credentials {
+                username System.getenv("MVN_USER")
+                password System.getenv("MVN_PASS")
+            }
+        }
+    }
     publications {
         register('pub', MavenPublication) {
             artifact jar
