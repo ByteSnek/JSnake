@@ -1,18 +1,15 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
-group = mavenGroup
-version = projectVersion
-
-sourceSets {
-    create('gradle')
-}
+group = jsnake_group_id
+version = jsnake_version
 
 configurations {
-    gradleCompileOnly.extendsFrom compileOnly
-    gradleImplementation.extendsFrom implementation
+    shadow
+    implementation.extendsFrom shadow
 }
 
 repositories {
@@ -22,27 +19,62 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.jetbrains:annotations:22.0.0'
+    shadow "com.google.code.findbugs:jsr305:${jsr_version}"
 
-    gradleCompileOnly gradleApi()
-    gradleImplementation sourceSets.main.getOutput()
+    shadow "javax.ws.rs:javax.ws.rs-api:${javax_rest_api_version}"
+    shadow "org.apache.commons:commons-lang3:${commons_lang_version}"
+    shadow "org.lwjgl:lwjgl-glfw:${glfw_version}"
+    shadow "net.sf.jopt-simple:jopt-simple:${jopt_version}"
+    shadow "org.json:json:${json_version}"
 }
 
 jar {
-    from sourceSets.gradle.getOutput()
-
-    manifest {
-        attributes 'FMLModType': 'GAMELIBRARY'
-        attributes 'Automatic-Module-Name': mavenGroup
-    }
-
-    from file('LICENSE')
+    enabled = false
 }
 
-tasks.register('preparePublish', JavaExec) {
+build.dependsOn shadowJar
+
+java {
+    withSourcesJar()
+}
+
+shadowJar {
+    manifest {
+        attributes 'FMLModType': 'GAMELIBRARY'
+        attributes 'Automatic-Module-Name': jsnake_group_id
+    }
+
+    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    setArchiveClassifier('')
+
+    configurations = [project.configurations.shadow]
+
+    from file('LICENSE')
+    from sourceSets.main.java
+}
+
+tasks.register('publishToJSnakeMaven', JavaExec) {
     group "publishing"
+
     mainClass = "xyz.snaker.hiss.maven.MavenRepositoryHook"
     classpath = sourceSets.main.runtimeClasspath
+
+    var list = new ArrayList<>()
+    var map = [
+            gpe: true,
+            io : false,
+            n  : jsnake_repo_name,
+            g  : jsnake_group_id,
+            i  : jsnake_artifact_id,
+            v  : jsnake_version
+    ]
+
+    map.forEach((k, v) -> {
+        list.add(String.format("--%s", k))
+        list.add(String.format("%s", v))
+    })
+
+    args = list
 }
 
 tasks.register('docJar', Jar) {
@@ -57,12 +89,13 @@ tasks.register('srcJar', Jar) {
     archiveClassifier = 'sources'
 }
 
-publish.dependsOn preparePublish
+publishToJSnakeMaven.finalizedBy publish
 
 publishing {
     repositories {
         maven {
             url "http://127.0.0.1:8080/releases"
+
             credentials {
                 username System.getenv("MVN_USER")
                 password System.getenv("MVN_PASS")
@@ -71,9 +104,26 @@ publishing {
     }
     publications {
         register('pub', MavenPublication) {
-            artifact jar
-            artifact srcJar
-            artifact docJar
+            artifacts = [shadowJar, sourcesJar]
+
+            pom {
+                name = jsnake_artifact_id
+                description = jsnake_description
+                url = jsnake_vcs_url
+
+                scm {
+                    url = jsnake_vcs_url
+                    connection = jsnake_vcs_connection
+                    developerConnection = jsnake_vcs_dev_connection
+                }
+
+                licenses {
+                    license {
+                        name = jsnake_license
+                        url = jsnake_license_url
+                    }
+                }
+            }
         }
     }
 }
