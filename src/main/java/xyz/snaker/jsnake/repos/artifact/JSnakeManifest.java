@@ -1,15 +1,15 @@
-package xyz.snaker.jsnake.repo.artifact;
+package xyz.snaker.jsnake.repos.artifact;
 
 /**
  * Created by SnakerBone on 28/07/24
  * <p>
  * Licensed under MIT
  **/
-public interface Manifest
+public interface JSnakeManifest
 {
     String getGroupId();
 
     String getArtifactId();
 
-    ArtifactVersion getVersion();
+    JSnakeArtifactVersion getVersion();
 }

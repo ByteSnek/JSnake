@@ -1,3 +1,5 @@
+//file:noinspection VulnerableLibrariesLocal
+
 plugins {
     id 'java'
     id 'maven-publish'
@@ -26,6 +28,7 @@ dependencies {
     shadow "org.lwjgl:lwjgl-glfw:${glfw_version}"
     shadow "net.sf.jopt-simple:jopt-simple:${jopt_version}"
     shadow "org.json:json:${json_version}"
+    shadow "org.jsoup:jsoup:${jsoup_version}"
 }
 
 jar {
@@ -42,6 +45,7 @@ shadowJar {
     manifest {
         attributes 'FMLModType': 'GAMELIBRARY'
         attributes 'Automatic-Module-Name': jsnake_group_id
+        attributes 'Main-Class': 'xyz.snaker.jsnake.repos.app.JSnakeReposApp'
     }
 
     setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
@@ -50,7 +54,6 @@ shadowJar {
     configurations = [project.configurations.shadow]
 
     from file('LICENSE')
-    from sourceSets.main.java
 }
 
 tasks.register('publishToJSnakeMaven', JavaExec) {

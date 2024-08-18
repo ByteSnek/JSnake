@@ -56,7 +56,7 @@ public class KeyPair
      **/
     private static boolean isInvalidKey(int key)
     {
-        Integer[] rawValues = Reflection.getFieldsInClass(GLFW.class, o -> o instanceof Integer, Integer[]::new);
+        Integer[] rawValues = Reflection.getFieldsInClass(GLFW.class, o -> o instanceof Integer, Integer[]::new, null);
         List<Integer> values = Arrays.stream(rawValues).toList();
 
         return !values.contains(key);

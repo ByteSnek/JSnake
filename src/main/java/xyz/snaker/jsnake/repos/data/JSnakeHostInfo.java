@@ -1,4 +1,4 @@
-package xyz.snaker.jsnake.repo;
+package xyz.snaker.jsnake.repos.data;
 
 import xyz.snaker.jsnake.system.ProtocolSecurityType;
 import xyz.snaker.jsnake.system.SystemSecretsAction;
@@ -8,14 +8,14 @@ import xyz.snaker.jsnake.system.SystemSecretsAction;
  * <p>
  * Licensed under MIT
  **/
-public class HostInfo
+public class JSnakeHostInfo
 {
     private final ProtocolSecurityType securityType;
     private final String hostname;
     private final String address;
     private final String port;
 
-    public HostInfo(ProtocolSecurityType securityType, String hostname, String port, SystemSecretsAction action)
+    public JSnakeHostInfo(ProtocolSecurityType securityType, String hostname, String port, SystemSecretsAction action)
     {
         if (securityType == null) {
             throw new RuntimeException("Security type cannot be null");

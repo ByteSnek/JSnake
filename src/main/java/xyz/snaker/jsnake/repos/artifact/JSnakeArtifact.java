@@ -1,10 +1,11 @@
-package xyz.snaker.jsnake.repo.artifact;
+package xyz.snaker.jsnake.repos.artifact;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import xyz.snaker.jsnake.utility.HttpUtilities;
 
 import javax.annotation.Nullable;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -17,14 +18,14 @@ import java.nio.file.Paths;
  * <p>
  * Licensed under MIT
  **/
-public class Artifact implements Manifest
+public class JSnakeArtifact implements JSnakeManifest
 {
     private final String repositoryUrl;
     private final String groupId;
     private final String artifactId;
-    private final ArtifactVersion version;
+    private final JSnakeArtifactVersion version;
 
-    private Artifact(String repositoryUrl, String groupId, String artifactId, ArtifactVersion version)
+    private JSnakeArtifact(String repositoryUrl, String groupId, String artifactId, JSnakeArtifactVersion version)
     {
         this.repositoryUrl = repositoryUrl;
         this.groupId = groupId;
@@ -136,7 +137,7 @@ public class Artifact implements Manifest
     }
 
     @Override
-    public ArtifactVersion getVersion()
+    public JSnakeArtifactVersion getVersion()
     {
         return version;
     }
@@ -146,7 +147,7 @@ public class Artifact implements Manifest
         private final String repositoryUrl;
         private String groupId;
         private String artifactId;
-        private ArtifactVersion version;
+        private JSnakeArtifactVersion version;
 
         public Builder(String repositoryUrl)
         {
@@ -165,7 +166,7 @@ public class Artifact implements Manifest
             return this;
         }
 
-        public Builder setVersion(ArtifactVersion version)
+        public Builder setVersion(JSnakeArtifactVersion version)
         {
             this.version = version;
             return this;
@@ -173,7 +174,7 @@ public class Artifact implements Manifest
 
         public Builder setVersion(String version)
         {
-            return setVersion(ArtifactVersion.of(version));
+            return setVersion(JSnakeArtifactVersion.of(version));
         }
 
         public Builder useLatestVersion()
@@ -187,7 +188,7 @@ public class Artifact implements Manifest
             }
 
             String address = getMetadataXmlAddress(repositoryUrl, groupId, artifactId);
-            Document document = HttpUtilities.getXmlDocument(address);
+            Document document = getXmlDocument(address);
 
             if (document != null) {
                 String latestVersion = getLatestVersion(document);
@@ -198,9 +199,27 @@ public class Artifact implements Manifest
             throw new RuntimeException(String.format("Invalid or no maven-metadata.xml document found at web address %s", address));
         }
 
-        public Artifact build()
+        public JSnakeArtifact build()
         {
-            return new Artifact(repositoryUrl, groupId, artifactId, version);
+            return new JSnakeArtifact(repositoryUrl, groupId, artifactId, version);
+        }
+
+        private Document getXmlDocument(String address)
+        {
+            try {
+                URL url = new URL(address);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                connection.setRequestMethod("GET");
+
+                InputStream stream = connection.getInputStream();
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+
+                return builder.parse(stream);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
 
         private String getMetadataXmlAddress(String repositoryUrl, String groupId, String artifactId)

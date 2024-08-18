@@ -1,13 +1,9 @@
-package xyz.snaker.jsnake.repo;
+package xyz.snaker.jsnake.repos;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import xyz.snaker.jsnake.sneaky.Sneaky;
-import xyz.snaker.jsnake.utility.HttpUtilities;
-import xyz.snaker.jsnake.utility.IOUtilities;
-import xyz.snaker.jsnake.utility.RandomWordCategory;
-import xyz.snaker.jsnake.utility.Strings;
 
 import java.util.List;
 
@@ -16,15 +12,20 @@ import java.util.List;
  * <p>
  * Licensed under MIT
  **/
-public class OptionSpecs
+public class JSnakeOptionSpecRegistry
 {
     public static final OptionParser PARSER = new OptionParser();
     public static final String USER_HOME = System.getProperty("user.home");
 
     public static final OptionSpec<String> NAME = register(
-            getRandomRepositoryName(),
+            JSnakeOptionSpecRegistry.getRandomRepositoryName(),
             "Sets the name of the repository",
             "name", "n"
+    );
+    public static final OptionSpec<String> EXISTING_REPOSITORY_DIRECTORY = register(
+            "",
+            "Sets an existing path to a reposilite repository to use",
+            "from", "f"
     );
     public static final OptionSpec<String> OUTPUT_DIRECTORY = register(
             String.format("%s\\JSnakeRepos", USER_HOME),
@@ -99,27 +100,16 @@ public class OptionSpecs
     {
         List<String> list = List.of(params);
 
-        return Sneaky.cast(PARSER.acceptsAll(list, description)
-                .withRequiredArg()
-                .ofType(Sneaky.cast(defaultValue.getClass()))
-                .defaultsTo(defaultValue));
+        return Sneaky.cast(
+                PARSER.acceptsAll(list, description)
+                        .withRequiredArg()
+                        .ofType(Sneaky.cast(defaultValue.getClass()))
+                        .defaultsTo(defaultValue)
+        );
     }
 
     static String getRandomRepositoryName()
     {
-        String key = "random_word";
-        String randomWord = IOUtilities.getFromStorage(key);
-
-        if (randomWord != null) {
-            return randomWord;
-        } else {
-            String animal = HttpUtilities.getRandomWord(RandomWordCategory.ANIMAL, null);
-            String adjective = HttpUtilities.getRandomWord(RandomWordCategory.ADJECTIVE, null);
-            String value = String.format("%s%s", Strings.i18nt(adjective), Strings.i18nt(animal));
-
-            IOUtilities.writeToStorage(value, key);
-
-            return value;
-        }
+        return "JSnakeReposApp.getExtendedFaker().placeholder();";
     }
 }

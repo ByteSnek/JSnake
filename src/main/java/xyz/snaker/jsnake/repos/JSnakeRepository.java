@@ -1,8 +1,12 @@
-package xyz.snaker.jsnake.repo;
+package xyz.snaker.jsnake.repos;
 
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
 import xyz.snaker.jsnake.logger.Logger;
 import xyz.snaker.jsnake.logger.Loggers;
-import xyz.snaker.jsnake.repo.artifact.Artifact;
+import xyz.snaker.jsnake.repos.artifact.JSnakeArtifact;
+import xyz.snaker.jsnake.repos.data.JSnakeCredentials;
+import xyz.snaker.jsnake.repos.data.JSnakeHostInfo;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -15,20 +19,21 @@ import java.util.function.BiFunction;
  * <p>
  * Licensed under MIT
  **/
-public class Repository
+public class JSnakeRepository
 {
     public static final Logger LOGGER = Loggers.getLogger();
 
     private final String name;
-    private final Credentials credentials;
-    private final HostInfo hostInfo;
-    private final Artifact artifact;
-    private Artifact publishingArtifact;
+    private final JSnakeCredentials credentials;
+    private final JSnakeHostInfo hostInfo;
+    private final JSnakeArtifact artifact;
+
+    private JSnakeArtifact publishingArtifact;
 
     private final BiFunction<String, String, ProcessBuilder> processBuilderFunction = (path, token) -> new ProcessBuilder("java", "-Xmx64M", "-jar", path, "--token", token);
     private Process process;
 
-    public Repository(String name, Credentials credentials, HostInfo hostInfo, Artifact artifact)
+    public JSnakeRepository(String name, JSnakeCredentials credentials, JSnakeHostInfo hostInfo, JSnakeArtifact artifact)
     {
         this.name = name;
         this.credentials = credentials;
@@ -36,7 +41,17 @@ public class Repository
         this.artifact = artifact;
     }
 
-    public void initialize(File outputFolder, @Nullable String classifier, boolean openInFileExplorer, boolean openInBrowser, boolean inheritIO, boolean gradlePublishEnvironment)
+    public void initialize(File outputFolder, OptionSpec<Boolean> openInExplorerSpec, OptionSpec<Boolean> openInBrowserSpec, OptionSpec<Boolean> inheritIOSpec, OptionSpec<Boolean> gradlePublishEnvironmentSpec, OptionSet set, @Nullable String classifier)
+    {
+        Boolean openInExplorer = openInExplorerSpec.value(set);
+        Boolean openInBrowser = openInBrowserSpec.value(set);
+        Boolean inheritIO = inheritIOSpec.value(set);
+        Boolean gradlePublishEnvironment = gradlePublishEnvironmentSpec.value(set);
+
+        initialize(outputFolder, classifier, openInExplorer, openInBrowser, inheritIO, gradlePublishEnvironment);
+    }
+
+    public void initialize(File outputFolder, @Nullable String classifier, boolean openInExplorer, boolean openInBrowser, boolean inheritIO, boolean gradlePublishEnvironment)
     {
         Path path = Path.of(outputFolder.getAbsolutePath());
         String jarPath = path.toAbsolutePath() + "\\" + artifact.getJarName(classifier);
@@ -76,7 +91,7 @@ public class Repository
                 LOGGER.debug("Opened repository in default browser");
             }
 
-            if (openInFileExplorer) {
+            if (openInExplorer) {
                 String command = String.format("explorer %s", path);
                 Runtime.getRuntime().exec(command);
                 LOGGER.debug("Opened repository in file explorer");
@@ -94,7 +109,7 @@ public class Repository
         }
     }
 
-    public void setPublishingArtifact(Artifact publishingArtifact)
+    public void setPublishingArtifact(JSnakeArtifact publishingArtifact)
     {
         this.publishingArtifact = publishingArtifact;
     }
@@ -104,22 +119,22 @@ public class Repository
         return name;
     }
 
-    public Credentials getCredentials()
+    public JSnakeCredentials getCredentials()
     {
         return credentials;
     }
 
-    public HostInfo getHostInfo()
+    public JSnakeHostInfo getHostInfo()
     {
         return hostInfo;
     }
 
-    public Artifact getArtifact()
+    public JSnakeArtifact getArtifact()
     {
         return artifact;
     }
 
-    public Artifact getPublishingArtifact()
+    public JSnakeArtifact getPublishingArtifact()
     {
         return publishingArtifact;
     }

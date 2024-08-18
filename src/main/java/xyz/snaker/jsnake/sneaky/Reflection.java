@@ -24,19 +24,19 @@ public class Reflection
         }
     }
 
-    public static <T> T[] getFieldsInClass(Class<?> clazz, Predicate<? super Object> filter, IntFunction<T[]> generator)
+    public static <T> T[] getFieldsInClass(Class<?> clazz, Predicate<? super Object> filter, IntFunction<T[]> generator, @Nullable Object instance)
     {
         return Sneaky.cast(Arrays.stream(clazz.getDeclaredFields())
-                .map(field -> getFieldDirect(clazz, field.getName(), null))
+                .map(field -> getFieldDirect(clazz, field.getName(), instance))
                 .filter(filter)
                 .toArray(generator)
         );
     }
 
-    public static <T> T getRandomFieldInClass(Class<?> clazz, @Nullable Predicate<? super Object> filter, IntFunction<T[]> generator)
+    public static <T> T getRandomFieldInClass(Class<?> clazz, @Nullable Predicate<? super Object> filter, IntFunction<T[]> generator, @Nullable Object instance)
     {
         return getRandom(Arrays.stream(clazz.getDeclaredFields())
-                .map(field -> getFieldDirect(clazz, field.getName(), null))
+                .map(field -> getFieldDirect(clazz, field.getName(), instance))
                 .filter(filter == null ? o -> true : filter)
                 .toArray(generator), new Random()
         );

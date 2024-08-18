@@ -5,8 +5,11 @@ import xyz.snaker.jsnake.system.JSnakeLib;
 import xyz.snaker.jsnake.thread.PeripheralException;
 
 import javax.annotation.Nonnull;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Field;
 import java.nio.ByteOrder;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -215,9 +218,31 @@ public final class Sneaky
         jSnakeLib.setEnv(key, value);
     }
 
+    public static String[] tryGetInstanceArgs()
+    {
+        RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
+        List<String> list = bean.getInputArguments();
+        String[] args = list.toArray(String[]::new);
+
+        if (args.length == 0) {
+            return new String[0];
+        } else {
+            return args;
+        }
+    }
+
     public static Unsafe getTheUnsafe()
     {
         return theUnsafe;
+    }
+
+    public static void fence(FenceAction type)
+    {
+        switch (type) {
+            case LOAD_ONLY -> theUnsafe.loadFence();
+            case STORE_ONLY -> theUnsafe.storeFence();
+            case LOAD_AND_STORE -> theUnsafe.fullFence();
+        }
     }
 
     /**
@@ -280,12 +305,12 @@ public final class Sneaky
      *
      * @return True if the current system is 64bit
      **/
-    static boolean is64bit()
+    public static boolean is64bit()
     {
         return System.getProperty("sun.arch.data.model").equals("64");
     }
 
-    static boolean isWindowsOS()
+    public static boolean isWindowsOS()
     {
         return System.getProperty("os.name").contains("Win");
     }
@@ -298,5 +323,12 @@ public final class Sneaky
         long left(long value, int bytes);
 
         long right(long value, int bytes);
+    }
+
+    public enum FenceAction
+    {
+        STORE_ONLY,
+        LOAD_ONLY,
+        LOAD_AND_STORE
     }
 }

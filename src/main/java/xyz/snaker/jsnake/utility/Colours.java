@@ -96,46 +96,15 @@ public class Colours
         float sat = vibranceColour * (1 - shift * saturationColour);
         float val = vibranceColour * (1 - (1 - shift) * saturationColour);
 
-        switch (normal6) {
-            case 0: {
-                return fastRGB(vibranceColour, val, hue);
-            }
-            case 1: {
-                return fastRGB(sat, vibranceColour, hue);
-            }
-            case 2: {
-                return fastRGB(hue, vibranceColour, val);
-            }
-            case 3: {
-                return fastRGB(hue, sat, vibranceColour);
-            }
-            case 4: {
-                return fastRGB(val, hue, vibranceColour);
-            }
-            case 5: {
-                return fastRGB(vibranceColour, hue, sat);
-            }
-            default: {
-                throw new RuntimeException();
-            }
-        }
-    }
-
-    public static int fastRGB(float red, float green, float blue)
-    {
-        int r = (int) (red * 255F);
-        int g = (int) (green * 255F);
-        int b = (int) (blue * 255F);
-
-        int r0 = (int) (r + 0.5F);
-        int g0 = (int) (g + 0.5F);
-        int b0 = (int) (b + 0.5F);
-
-        int r1 = r0 & 0xFF;
-        int g1 = g0 & 0xFF;
-        int b1 = b0 & 0xFF;
-
-        return r1 << 16 | g1 << 8 | b1;
+        return switch (normal6) {
+            case 0 -> FastColour.rgb(vibranceColour, val, hue);
+            case 1 -> FastColour.rgb(sat, vibranceColour, hue);
+            case 2 -> FastColour.rgb(hue, vibranceColour, val);
+            case 3 -> FastColour.rgb(hue, sat, vibranceColour);
+            case 4 -> FastColour.rgb(val, hue, vibranceColour);
+            case 5 -> FastColour.rgb(vibranceColour, hue, sat);
+            default -> throw new RuntimeException();
+        };
     }
 
     static String strip(String hexCode)

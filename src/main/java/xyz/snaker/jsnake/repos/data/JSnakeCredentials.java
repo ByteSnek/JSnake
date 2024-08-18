@@ -1,4 +1,4 @@
-package xyz.snaker.jsnake.repo;
+package xyz.snaker.jsnake.repos.data;
 
 import xyz.snaker.jsnake.system.SystemSecretsAction;
 
@@ -10,15 +10,15 @@ import java.util.Objects;
  * <p>
  * Licensed under MIT
  **/
-public class Credentials
+public class JSnakeCredentials
 {
-    public static final Credentials UNAUTHORIZED = new Credentials(null, null, SystemSecretsAction.NONE);
+    public static final JSnakeCredentials UNAUTHORIZED = new JSnakeCredentials(null, null, SystemSecretsAction.NONE);
 
     private final String username;
     private final String password;
     private final String token;
 
-    public Credentials(@Nullable String username, @Nullable String password, SystemSecretsAction action)
+    public JSnakeCredentials(@Nullable String username, @Nullable String password, SystemSecretsAction action)
     {
         if (username == null || password == null) {
             this.username = null;

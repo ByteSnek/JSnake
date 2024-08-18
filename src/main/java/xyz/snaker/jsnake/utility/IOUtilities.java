@@ -1,6 +1,7 @@
 package xyz.snaker.jsnake.utility;
 
 import xyz.snaker.jsnake.logger.LogColour;
+import xyz.snaker.jsnake.sneaky.Sneaky;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -21,16 +22,34 @@ public class IOUtilities
         destination.printf("%s%s%n%s", value, message, reset);
     }
 
-    public static void writeToStorage(String string, String name)
+    public static <V> void writeToStorage(V value, File file, boolean openOnFinish)
+    {
+        writeToStorage(value.toString(), file.isAbsolute() ? file.toPath() : file.getAbsoluteFile().toPath(), openOnFinish);
+    }
+
+    public static <V> void writeToStorage(V value, Path path, boolean openOnFinish)
+    {
+        writeToStorage(value, path.isAbsolute() ? path.toString() : path.toAbsolutePath().toString(), openOnFinish);
+    }
+
+    public static <V> void writeToStorage(V value, String path, boolean openOnFinish)
+    {
+        writeToStorage(value.toString(), path, openOnFinish);
+    }
+
+    public static void writeToStorage(String data, File file, boolean openOnFinish)
+    {
+        writeToStorage(data, file.isAbsolute() ? file.toPath() : file.getAbsoluteFile().toPath(), openOnFinish);
+    }
+
+    public static void writeToStorage(String data, Path path, boolean openOnFinish)
+    {
+        writeToStorage(data, path.isAbsolute() ? path.toString() : path.toAbsolutePath().toString(), openOnFinish);
+    }
+
+    public static void writeToStorage(String data, String name, boolean openOnFinish)
     {
         String storage = System.getProperty("jsnake.storage");
-
-        if (storage == null) {
-            IOUtilities.setIOProperties();
-
-            storage = System.getProperty("jsnake.storage");
-        }
-
         Path path = Path.of(storage, name + ".jsnake").toAbsolutePath();
 
         if (!Files.exists(path)) {
@@ -43,11 +62,16 @@ public class IOUtilities
 
         try {
             OutputStream stream = new FileOutputStream(path.toFile());
-            byte[] bytes = string.getBytes();
+            byte[] bytes = data.getBytes();
 
             stream.write(bytes);
             stream.flush();
             stream.close();
+
+            if (openOnFinish) {
+                IOUtilities.openUrl(path.getParent().toString());
+            }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -76,22 +100,20 @@ public class IOUtilities
         }
     }
 
-    public static void openUriConnection(String path)
+    public static void openUrl(String path)
     {
         try {
-            String command = String.format("explorer %s", path);
+            String command;
+
+            if (Sneaky.isWindowsOS()) {
+                command = String.format("explorer %s", path);
+            } else {
+                command = String.format("xdg-open %s", path);
+            }
 
             Runtime.getRuntime().exec(command);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static void setIOProperties()
-    {
-        String tmpdir = System.getProperty("java.io.tmpdir");
-        Path path = Path.of(tmpdir, "jsnake").toAbsolutePath();
-
-        System.setProperty("jsnake.storage", path.toString());
     }
 }
