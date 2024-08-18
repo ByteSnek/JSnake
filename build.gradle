@@ -21,14 +21,7 @@ repositories {
 }
 
 dependencies {
-    shadow "com.google.code.findbugs:jsr305:${jsr_version}"
-
-    shadow "javax.ws.rs:javax.ws.rs-api:${javax_rest_api_version}"
-    shadow "org.apache.commons:commons-lang3:${commons_lang_version}"
-    shadow "org.lwjgl:lwjgl-glfw:${glfw_version}"
-    shadow "net.sf.jopt-simple:jopt-simple:${jopt_version}"
-    shadow "org.json:json:${json_version}"
-    shadow "org.jsoup:jsoup:${jsoup_version}"
+    compileOnly "com.google.code.findbugs:jsr305:${jsr_version}"
 }
 
 jar {
@@ -45,7 +38,6 @@ shadowJar {
     manifest {
         attributes 'FMLModType': 'GAMELIBRARY'
         attributes 'Automatic-Module-Name': jsnake_group_id
-        attributes 'Main-Class': 'xyz.snaker.jsnake.repos.app.JSnakeReposApp'
     }
 
     setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)

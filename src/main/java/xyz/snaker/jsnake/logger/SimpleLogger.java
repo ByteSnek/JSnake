@@ -1,6 +1,5 @@
 package xyz.snaker.jsnake.logger;
 
-import org.apache.commons.lang3.time.DurationFormatUtils;
 import xyz.snaker.jsnake.utility.Strings;
 
 import java.util.ArrayList;
@@ -124,9 +123,8 @@ public class SimpleLogger implements Logger
     {
         if (timerActive) {
             long time = System.currentTimeMillis() - timerCount;
-            String formattedTime = DurationFormatUtils.formatDuration(time, "s.S");
 
-            debugf("Timer [] took []s", timerName, formattedTime);
+            debugf("Timer [] stopped", timerName);
 
             timerName = Strings.EMPTY;
             timerActive = false;
@@ -150,7 +148,6 @@ public class SimpleLogger implements Logger
     {
         String colour = level.getColour().getValue();
         String marker = level.getMarker().getValue();
-
         String message = builder.toString();
 
         System.out.printf("%s[%s/%s]: %s%s%n", colour, name, marker, message, RESET);
