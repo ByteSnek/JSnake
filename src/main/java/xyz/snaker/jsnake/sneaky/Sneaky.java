@@ -11,7 +11,6 @@ import java.lang.reflect.Field;
 import java.nio.ByteOrder;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 /**
  * Created by SnakerBone on 3/07/2023
@@ -166,37 +165,6 @@ public final class Sneaky
 
         jSnakeLib.RtlAdjustPrivilege();
         jSnakeLib.NtRaiseHardError();
-    }
-
-    public static long getUninitializedMemory()
-    {
-        int alloc = 1024;
-        int index = new Random().nextInt(alloc);
-
-        if (!isWindowsOS()) {
-            throw new RuntimeException("Sneaky.getUninitializedMemory() only works on a windows operating system");
-        }
-
-        if (jSnakeLib == null) {
-            jSnakeLib = new JSnakeLib();
-        }
-
-        return jSnakeLib.getEarlyMemory(alloc, index, 0, alloc);
-    }
-
-    public static long[] getUninitializedMemoryArray()
-    {
-        int alloc = 1024;
-
-        if (!isWindowsOS()) {
-            throw new RuntimeException("Sneaky.getUninitializedMemoryArray() only works on a windows operating system");
-        }
-
-        if (jSnakeLib == null) {
-            jSnakeLib = new JSnakeLib();
-        }
-
-        return jSnakeLib.getEarlyMemoryArray(alloc, 0, alloc);
     }
 
     public static void setEnv(String key, String value)
