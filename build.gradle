@@ -1,95 +1,30 @@
-//file:noinspection VulnerableLibrariesLocal
-
 plugins {
     id 'java'
     id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = jsnake_group_id
 version = jsnake_version
 
-configurations {
-    shadow
-    implementation.extendsFrom shadow
-}
-
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url 'https://jitpack.io' }
+    maven { url "https://repo.snaker.xyz/releases" }
 }
 
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${jsr_version}"
 }
 
-jar {
-    enabled = false
-}
-
-build.dependsOn shadowJar
-
 java {
     withSourcesJar()
+    withJavadocJar()
 }
-
-shadowJar {
-    manifest {
-        attributes 'FMLModType': 'GAMELIBRARY'
-        attributes 'Automatic-Module-Name': jsnake_group_id
-    }
-
-    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-    setArchiveClassifier('')
-
-    configurations = [project.configurations.shadow]
-
-    from file('LICENSE')
-}
-
-tasks.register('publishToJSnakeMaven', JavaExec) {
-    group "publishing"
-
-    mainClass = "xyz.snaker.hiss.maven.MavenRepositoryHook"
-    classpath = sourceSets.main.runtimeClasspath
-
-    var list = new ArrayList<>()
-    var map = [
-            gpe: true,
-            io : false,
-            n  : jsnake_repo_name,
-            g  : jsnake_group_id,
-            i  : jsnake_artifact_id,
-            v  : jsnake_version
-    ]
-
-    map.forEach((k, v) -> {
-        list.add(String.format("--%s", k))
-        list.add(String.format("%s", v))
-    })
-
-    args = list
-}
-
-tasks.register('docJar', Jar) {
-    build.dependsOn it
-    from javadoc
-    archiveClassifier = 'javadoc'
-}
-
-tasks.register('srcJar', Jar) {
-    build.dependsOn it
-    from sourceSets.main.allSource
-    archiveClassifier = 'sources'
-}
-
-publishToJSnakeMaven.finalizedBy publish
 
 publishing {
     repositories {
         maven {
-            url "http://127.0.0.1:8080/releases"
+            url "https://repo.snaker.xyz/releases"
 
             credentials {
                 username System.getenv("MVN_USER")
@@ -99,7 +34,7 @@ publishing {
     }
     publications {
         register('pub', MavenPublication) {
-            artifacts = [shadowJar, sourcesJar]
+            artifacts = [jar, sourcesJar, javadocJar]
 
             pom {
                 name = jsnake_artifact_id
