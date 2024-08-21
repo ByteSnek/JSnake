@@ -33,7 +33,6 @@ public class JSnakeLib implements DLL
      *
      * @param key   The key to set
      * @param value The value to set
-     * @apiNote May invoke undefined behaviour
      **/
     @ErrorProne(Reason.UNCHECKED_JNI_ERROR)
     public native void setEnv(String key, String value);
