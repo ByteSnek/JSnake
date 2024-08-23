@@ -21,6 +21,17 @@ java {
     withJavadocJar()
 }
 
+jar {
+    from sourceSets.main.output
+
+    manifest {
+        attributes 'FMLModType': 'GAMELIBRARY'
+        attributes 'Automatic-Module-Name': group
+    }
+
+    from file("LICENSE")
+}
+
 publishing {
     repositories {
         maven {
