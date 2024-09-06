@@ -1,10 +1,10 @@
 package xyz.snaker.jsnake.sneaky;
 
+import org.jetbrains.annotations.NotNull;
 import sun.misc.Unsafe;
 import xyz.snaker.jsnake.system.JSnakeLib;
-import xyz.snaker.jsnake.thread.PeripheralException;
+import xyz.snaker.jsnake.thread.PeripheralExceptionThread;
 
-import javax.annotation.Nonnull;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Field;
@@ -61,7 +61,7 @@ public final class Sneaky
             field.setAccessible(true);
             theUnsafe = (Unsafe) field.get(null);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            PeripheralException.invoke("Failed to get theUnsafe", e);
+            PeripheralExceptionThread.invoke("Failed to get theUnsafe", e);
         }
     }
 
@@ -104,7 +104,7 @@ public final class Sneaky
      * @throws RuntimeException     if the class could not be instantiated
      * @throws NullPointerException if the class is null
      **/
-    @Nonnull
+    @NotNull
     public static <T> T instantiate(Class<T> clazz)
     {
         try {

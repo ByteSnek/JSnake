@@ -1,10 +1,16 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
-group = jsnake_group_id
-version = jsnake_version
+group = jSnakeGroupId
+version = jSnakeVersion
+
+configurations {
+    shadow
+    implementation.extendsFrom(shadow)
+}
 
 repositories {
     mavenLocal()
@@ -13,7 +19,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly "com.google.code.findbugs:jsr305:${jsr_version}"
+    implementation("com.google.code.gson:gson:${gsonVersion}")
+    compileOnly("org.jetbrains:annotations:${annotationsVersion}")
 }
 
 java {
@@ -21,15 +28,23 @@ java {
     withJavadocJar()
 }
 
-jar {
-    from sourceSets.main.output
+jar.enabled = false
+
+build.dependsOn shadowJar
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+
+    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    setArchiveClassifier('')
 
     manifest {
         attributes 'FMLModType': 'GAMELIBRARY'
         attributes 'Automatic-Module-Name': group
     }
 
-    from file("LICENSE")
+    from file('LICENSE')
+    from sourceSets.main.output
 }
 
 publishing {
@@ -45,23 +60,23 @@ publishing {
     }
     publications {
         register('pub', MavenPublication) {
-            artifacts = [jar, sourcesJar, javadocJar]
+            artifacts = [shadowJar, sourcesJar, javadocJar]
 
             pom {
-                name = jsnake_artifact_id
-                description = jsnake_description
-                url = jsnake_vcs_url
+                name = jSnakeArtifactId
+                description = jSnakeDescription
+                url = jSnakeVcsUrl
 
                 scm {
-                    url = jsnake_vcs_url
-                    connection = jsnake_vcs_connection
-                    developerConnection = jsnake_vcs_dev_connection
+                    url = jSnakeVcsUrl
+                    connection = jSnakeVcsConnection
+                    developerConnection = jSnakeVcsDevConnection
                 }
 
                 licenses {
                     license {
-                        name = jsnake_license
-                        url = jsnake_license_url
+                        name = jSnakeLicense
+                        url = jSnakeLicenseUrl
                     }
                 }
             }
