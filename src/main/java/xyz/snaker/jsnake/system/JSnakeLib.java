@@ -1,7 +1,5 @@
 package xyz.snaker.jsnake.system;
 
-import static xyz.snaker.jsnake.system.ErrorProne.Reason;
-
 /**
  * Created by SnakerBone on 31/07/24
  * <p>
@@ -34,7 +32,6 @@ public class JSnakeLib implements DLL
      * @param key   The key to set
      * @param value The value to set
      **/
-    @ErrorProne(Reason.UNCHECKED_JNI_ERROR)
     public native void setEnv(String key, String value);
 
     @Override

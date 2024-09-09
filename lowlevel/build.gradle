@@ -3,8 +3,12 @@ plugins {
     id 'maven-publish'
 }
 
-group = jSnakeGroupId
+group = 'xyz.snaker.jsnake.lowlevel'
 version = jSnakeVersion
+
+base {
+    archivesName = 'jsnake-lowlevel'
+}
 
 repositories {
     mavenLocal()
@@ -13,26 +17,9 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.code.gson:gson:${gsonVersion}")
-    compileOnly("org.jetbrains:annotations:${annotationsVersion}")
-}
-
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
-jar {
-    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-    setArchiveClassifier('')
-
-    manifest {
-        attributes 'FMLModType': 'GAMELIBRARY'
-        attributes 'Automatic-Module-Name': group
-    }
-
-    from file('LICENSE')
-    from sourceSets.main.output
+    implementation("org.antlr:antlr4:${antlrVersion}")
+    implementation("org.antlr:antlr4-runtime:${antlrVersion}")
+    implementation("net.java.dev.jna:jna:${jnaVersion}")
 }
 
 tasks.withType(GenerateModuleMetadata).configureEach {
@@ -53,8 +40,6 @@ publishing {
     publications {
         register('pub', MavenPublication) {
             from components.java
-
-            artifacts = [jar, sourcesJar, javadocJar]
 
             pom {
                 name = jSnakeArtifactId
