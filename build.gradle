@@ -35,10 +35,6 @@ jar {
     from sourceSets.main.output
 }
 
-tasks.withType(GenerateModuleMetadata).configureEach {
-    enabled = true
-}
-
 publishing {
     repositories {
         maven {
@@ -52,8 +48,6 @@ publishing {
     }
     publications {
         register('pub', MavenPublication) {
-            from components.java
-
             artifacts = [jar, sourcesJar, javadocJar]
 
             pom {
